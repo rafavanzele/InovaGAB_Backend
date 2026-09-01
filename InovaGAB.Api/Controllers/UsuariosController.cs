@@ -60,7 +60,7 @@ namespace InovaGAB.Api.Controllers
             {
                 Nome = dto.Nome,
                 Email = dto.Email,
-                Senha = dto.Senha,
+                Senha = BCrypt.Net.BCrypt.HashPassword(dto.Senha),
                 Perfil = dto.Perfil
             };
 
@@ -78,6 +78,34 @@ namespace InovaGAB.Api.Controllers
                 nameof(BuscarPorId),
                 new { id = usuario.Id },
                 response);
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<UsuarioResponseDto>> Login(LoginDto dto)
+        {
+            var usuario = await _repository.BuscarPorEmailAsync(dto.Email);
+
+            if (usuario == null)
+            {
+                return Unauthorized("E-mail ou senha inválidos.");
+            }
+
+            var senhaValida = BCrypt.Net.BCrypt.Verify(dto.Senha, usuario.Senha);
+
+            if (!senhaValida)
+            {
+                return Unauthorized("E-mail ou senha inválidos.");
+            }
+
+            var response = new UsuarioResponseDto
+            {
+                Id = usuario.Id!,
+                Nome = usuario.Nome,
+                Email = usuario.Email,
+                Perfil = usuario.Perfil
+            };
+
+            return Ok(response);
         }
 
         [HttpPut("{id}")]

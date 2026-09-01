@@ -23,6 +23,13 @@ namespace InovaGAB.Api.Repositories
             return await _usuarios.Find(usuario => usuario.Id == id).FirstOrDefaultAsync();
         }
 
+        public async Task<Usuario?> BuscarPorEmailAsync(string email)
+        {
+            return await _usuarios
+                .Find(usuario => usuario.Email == email)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task CriarAsync(Usuario usuario)
         {
             await _usuarios.InsertOneAsync(usuario);
