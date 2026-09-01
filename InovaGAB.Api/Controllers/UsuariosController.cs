@@ -2,6 +2,8 @@
 using InovaGAB.Api.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using InovaGAB.Api.DTOs;
+using InovaGAB.Api.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InovaGAB.Api.Controllers
 {
@@ -10,12 +12,17 @@ namespace InovaGAB.Api.Controllers
     public class UsuariosController : ControllerBase
     {
         private readonly UsuarioRepository _repository;
+        private readonly TokenService _tokenService;
 
-        public UsuariosController(UsuarioRepository repository)
+        public UsuariosController(
+            UsuarioRepository repository,
+            TokenService tokenService)
         {
             _repository = repository;
+            _tokenService = tokenService;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<List<UsuarioResponseDto>>> ListarTodos()
         {
@@ -81,7 +88,7 @@ namespace InovaGAB.Api.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<UsuarioResponseDto>> Login(LoginDto dto)
+        public async Task<ActionResult<LoginResponseDto>> Login(LoginDto dto)
         {
             var usuario = await _repository.BuscarPorEmailAsync(dto.Email);
 
@@ -97,12 +104,15 @@ namespace InovaGAB.Api.Controllers
                 return Unauthorized("E-mail ou senha inválidos.");
             }
 
-            var response = new UsuarioResponseDto
+            var token = _tokenService.GerarToken(usuario);
+
+            var response = new LoginResponseDto
             {
                 Id = usuario.Id!,
                 Nome = usuario.Nome,
                 Email = usuario.Email,
-                Perfil = usuario.Perfil
+                Perfil = usuario.Perfil,
+                Token = token
             };
 
             return Ok(response);
