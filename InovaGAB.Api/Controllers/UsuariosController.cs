@@ -1,6 +1,7 @@
 ﻿using InovaGAB.Api.Models;
 using InovaGAB.Api.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using InovaGAB.Api.DTOs;
 
 namespace InovaGAB.Api.Controllers
 {
@@ -16,15 +17,23 @@ namespace InovaGAB.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Usuario>>> ListarTodos()
+        public async Task<ActionResult<List<UsuarioResponseDto>>> ListarTodos()
         {
             var usuarios = await _repository.ListarTodosAsync();
 
-            return Ok(usuarios);
+            var response = usuarios.Select(usuario => new UsuarioResponseDto
+            {
+                Id = usuario.Id!,
+                Nome = usuario.Nome,
+                Email = usuario.Email,
+                Perfil = usuario.Perfil
+            }).ToList();
+
+            return Ok(response);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Usuario>> BuscarPorId(string id)
+        public async Task<ActionResult<UsuarioResponseDto>> BuscarPorId(string id)
         {
             var usuario = await _repository.BuscarPorIdAsync(id);
 
@@ -33,22 +42,46 @@ namespace InovaGAB.Api.Controllers
                 return NotFound();
             }
 
-            return Ok(usuario);
+            var response = new UsuarioResponseDto
+            {
+                Id = usuario.Id!,
+                Nome = usuario.Nome,
+                Email = usuario.Email,
+                Perfil = usuario.Perfil
+            };
+
+            return Ok(response);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Usuario>> Criar(Usuario usuario)
+        public async Task<ActionResult<UsuarioResponseDto>> Criar(CriarUsuarioDto dto)
         {
+            var usuario = new Usuario
+            {
+                Nome = dto.Nome,
+                Email = dto.Email,
+                Senha = dto.Senha,
+                Perfil = dto.Perfil
+            };
+
             await _repository.CriarAsync(usuario);
 
+            var response = new UsuarioResponseDto
+            {
+                Id = usuario.Id!,
+                Nome = usuario.Nome,
+                Email = usuario.Email,
+                Perfil = usuario.Perfil
+            };
+
             return CreatedAtAction(
-                nameof(ListarTodos),
+                nameof(BuscarPorId),
                 new { id = usuario.Id },
-                usuario);
+                response);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Atualizar(string id, Usuario usuario)
+        public async Task<IActionResult> Atualizar(string id, AtualizarUsuarioDto dto)
         {
             var usuarioExistente = await _repository.BuscarPorIdAsync(id);
 
@@ -57,9 +90,11 @@ namespace InovaGAB.Api.Controllers
                 return NotFound();
             }
 
-            usuario.Id = id;
+            usuarioExistente.Nome = dto.Nome;
+            usuarioExistente.Email = dto.Email;
+            usuarioExistente.Perfil = dto.Perfil;
 
-            await _repository.AtualizarAsync(id, usuario);
+            await _repository.AtualizarAsync(id, usuarioExistente);
 
             return NoContent();
         }
