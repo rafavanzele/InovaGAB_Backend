@@ -23,6 +23,19 @@ namespace InovaGAB.Api.Controllers
             return Ok(usuarios);
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Usuario>> BuscarPorId(string id)
+        {
+            var usuario = await _repository.BuscarPorIdAsync(id);
+
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(usuario);
+        }
+
         [HttpPost]
         public async Task<ActionResult<Usuario>> Criar(Usuario usuario)
         {
@@ -32,6 +45,38 @@ namespace InovaGAB.Api.Controllers
                 nameof(ListarTodos),
                 new { id = usuario.Id },
                 usuario);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Atualizar(string id, Usuario usuario)
+        {
+            var usuarioExistente = await _repository.BuscarPorIdAsync(id);
+
+            if (usuarioExistente == null)
+            {
+                return NotFound();
+            }
+
+            usuario.Id = id;
+
+            await _repository.AtualizarAsync(id, usuario);
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Excluir(string id)
+        {
+            var usuarioExistente = await _repository.BuscarPorIdAsync(id);
+
+            if (usuarioExistente == null)
+            {
+                return NotFound();
+            }
+
+            await _repository.ExcluirAsync(id);
+
+            return NoContent();
         }
     }
 }
