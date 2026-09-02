@@ -25,6 +25,15 @@ namespace InovaGAB.Api.Controllers
             return Ok(ideias);
         }
 
+        [Authorize(Roles = "Gestor")]
+        [HttpGet("pendentes")]
+        public async Task<IActionResult> ListarPendentes()
+        {
+            var ideias = await _service.ListarPendentesAsync();
+
+            return Ok(ideias);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> BuscarPorId(string id)
         {
