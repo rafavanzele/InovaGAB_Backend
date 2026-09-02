@@ -69,6 +69,20 @@ namespace InovaGAB.Api.Controllers
             string id,
             AtualizarIdeiaDto dto)
         {
+            var autorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var ideiaExistente = await _service.BuscarPorIdAsync(id);
+
+            if (ideiaExistente == null)
+            {
+                return NotFound(new { mensagem = "Ideia não encontrada." });
+            }
+
+            if (ideiaExistente.AutorId != autorId)
+            {
+                return Forbid();
+            }
+
             var ideia = await _service.AtualizarAsync(id, dto);
 
             if (ideia == null)
@@ -83,6 +97,20 @@ namespace InovaGAB.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Excluir(string id)
         {
+            var autorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var ideiaExistente = await _service.BuscarPorIdAsync(id);
+
+            if (ideiaExistente == null)
+            {
+                return NotFound(new { mensagem = "Ideia não encontrada." });
+            }
+
+            if (ideiaExistente.AutorId != autorId)
+            {
+                return Forbid();
+            }
+
             var excluido = await _service.ExcluirAsync(id);
 
             if (!excluido)
