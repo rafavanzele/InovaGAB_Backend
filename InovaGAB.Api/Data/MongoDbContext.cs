@@ -17,5 +17,8 @@ namespace InovaGAB.Api.Data
 
         public IMongoCollection<Usuario> Usuarios =>
             _database.GetCollection<Usuario>("usuarios");
+
+        public IMongoCollection<Ideia> Ideias =>
+            _database.GetCollection<Ideia>("ideias");
     }
 }
