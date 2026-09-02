@@ -69,6 +69,36 @@ namespace InovaGAB.Api.Services
             return ideia;
         }
 
+        public async Task<Ideia?> AtualizarStatusAsync(
+            string id,
+            AtualizarStatusIdeiaDto dto)
+        {
+            var statusPermitidos = new[] { "Aprovada", "Rejeitada" };
+
+            if (!statusPermitidos.Contains(dto.Status))
+            {
+                throw new ArgumentException("Status inválido.");
+            }
+
+            var ideia = await _repository.BuscarPorIdAsync(id);
+
+            if (ideia == null)
+            {
+                return null;
+            }
+
+            ideia.Status = dto.Status;
+
+            var atualizado = await _repository.AtualizarAsync(id, ideia);
+
+            if (!atualizado)
+            {
+                return null;
+            }
+
+            return ideia;
+        }
+
         public async Task<bool> ExcluirAsync(string id)
         {
             var ideia = await _repository.BuscarPorIdAsync(id);

@@ -93,6 +93,29 @@ namespace InovaGAB.Api.Controllers
             return Ok(ideia);
         }
 
+        [Authorize(Roles = "Gestor")]
+        [HttpPatch("{id}/status")]
+        public async Task<IActionResult> AtualizarStatus(
+            string id,
+            AtualizarStatusIdeiaDto dto)
+        {
+            try
+            {
+                var ideia = await _service.AtualizarStatusAsync(id, dto);
+
+                if (ideia == null)
+                {
+                    return NotFound(new { mensagem = "Ideia não encontrada." });
+                }
+
+                return Ok(ideia);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
+            }
+        }
+
         [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Excluir(string id)
