@@ -49,6 +49,8 @@ builder.Services.AddSingleton<MongoDbContext>();
 builder.Services.AddScoped<UsuarioRepository>();
 builder.Services.AddScoped<IdeiaRepository>();
 builder.Services.AddScoped<IdeiaService>();
+builder.Services.AddScoped<ProjetoRepository>();
+builder.Services.AddScoped<ProjetoService>();
 builder.Services.AddScoped<TokenService>();
 
 var jwtKey = builder.Configuration["Jwt:Key"]
