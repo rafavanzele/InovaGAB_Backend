@@ -51,6 +51,8 @@ builder.Services.AddScoped<IdeiaRepository>();
 builder.Services.AddScoped<IdeiaService>();
 builder.Services.AddScoped<ProjetoRepository>();
 builder.Services.AddScoped<ProjetoService>();
+builder.Services.AddScoped<EquipeRepository>();
+builder.Services.AddScoped<EquipeService>();
 builder.Services.AddScoped<TokenService>();
 
 var jwtKey = builder.Configuration["Jwt:Key"]
