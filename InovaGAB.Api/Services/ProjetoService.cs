@@ -45,6 +45,34 @@ namespace InovaGAB.Api.Services
             return projeto;
         }
 
+        public async Task<Projeto?> AtualizarAsync(
+            string id,
+            AtualizarProjetoDto dto)
+        {
+            var projeto = await _repository.BuscarPorIdAsync(id);
+
+            if (projeto == null)
+            {
+                return null;
+            }
+
+            projeto.Titulo = dto.Titulo;
+            projeto.Descricao = dto.Descricao;
+            projeto.Responsavel = dto.Responsavel;
+            projeto.Prazo = dto.Prazo;
+            projeto.Investimento = dto.Investimento;
+            projeto.RetornoPrevisto = dto.RetornoPrevisto;
+
+            var atualizado = await _repository.AtualizarAsync(projeto);
+
+            if (!atualizado)
+            {
+                return null;
+            }
+
+            return projeto;
+        }
+
         public async Task<bool> AtualizarAsync(Projeto projeto)
         {
             return await _repository.AtualizarAsync(projeto);
