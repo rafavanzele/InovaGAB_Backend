@@ -26,5 +26,8 @@ namespace InovaGAB.Api.Data
 
         public IMongoCollection<Equipe> Equipes =>
             _database.GetCollection<Equipe>("equipes");
+
+        public IMongoCollection<DiretrizEstrategica> DiretrizesEstrategicas =>
+            _database.GetCollection<DiretrizEstrategica>("diretrizesEstrategicas");
     }
 }
