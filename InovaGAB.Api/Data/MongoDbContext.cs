@@ -29,5 +29,8 @@ namespace InovaGAB.Api.Data
 
         public IMongoCollection<DiretrizEstrategica> DiretrizesEstrategicas =>
             _database.GetCollection<DiretrizEstrategica>("diretrizesEstrategicas");
+
+        public IMongoCollection<IndicadorEstrategico> IndicadoresEstrategicos =>
+            _database.GetCollection<IndicadorEstrategico>("indicadoresEstrategicos");
     }
 }
