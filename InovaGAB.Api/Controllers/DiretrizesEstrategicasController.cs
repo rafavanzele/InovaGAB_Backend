@@ -7,7 +7,7 @@ namespace InovaGAB.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Roles = "Lideranca")]
     public class DiretrizesEstrategicasController : ControllerBase
     {
         private readonly DiretrizEstrategicaService _service;
