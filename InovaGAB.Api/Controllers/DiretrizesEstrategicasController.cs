@@ -7,7 +7,7 @@ namespace InovaGAB.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Lideranca")]
+    [Authorize]
     public class DiretrizesEstrategicasController : ControllerBase
     {
         private readonly DiretrizEstrategicaService _service;
@@ -17,6 +17,7 @@ namespace InovaGAB.Api.Controllers
             _service = service;
         }
 
+        [Authorize(Roles = "Lideranca")]
         [HttpPost]
         public async Task<IActionResult> Criar(CriarDiretrizEstrategicaDto dto)
         {
@@ -49,6 +50,7 @@ namespace InovaGAB.Api.Controllers
             return Ok(diretriz);
         }
 
+        [Authorize(Roles = "Lideranca")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Atualizar(
             string id,
@@ -64,6 +66,7 @@ namespace InovaGAB.Api.Controllers
             return Ok(diretriz);
         }
 
+        [Authorize(Roles = "Lideranca")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Excluir(string id)
         {
