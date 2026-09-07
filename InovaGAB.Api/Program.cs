@@ -57,6 +57,8 @@ builder.Services.AddScoped<DiretrizEstrategicaRepository>();
 builder.Services.AddScoped<DiretrizEstrategicaService>();
 builder.Services.AddScoped<IndicadorEstrategicoRepository>();
 builder.Services.AddScoped<IndicadorEstrategicoService>();
+builder.Services.AddScoped<ResultadoAlcancadoRepository>();
+builder.Services.AddScoped<ResultadoAlcancadoService>();
 builder.Services.AddScoped<TokenService>();
 
 var jwtKey = builder.Configuration["Jwt:Key"]
