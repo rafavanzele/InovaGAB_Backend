@@ -7,7 +7,7 @@ namespace InovaGAB.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Gestor")]
+    [Authorize]
     public class EquipesController : ControllerBase
     {
         private readonly EquipeService _service;
@@ -38,6 +38,7 @@ namespace InovaGAB.Api.Controllers
             return Ok(equipe);
         }
 
+        [Authorize(Roles = "Gestor")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Atualizar(string id, CriarEquipeDto dto)
         {
@@ -51,6 +52,7 @@ namespace InovaGAB.Api.Controllers
             return Ok(equipe);
         }
 
+        [Authorize(Roles = "Gestor")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Excluir(string id)
         {
@@ -64,6 +66,7 @@ namespace InovaGAB.Api.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Gestor")]
         [HttpPost]
         public async Task<IActionResult> Criar(CriarEquipeDto dto)
         {
