@@ -61,6 +61,7 @@ builder.Services.AddScoped<ResultadoAlcancadoRepository>();
 builder.Services.AddScoped<ResultadoAlcancadoService>();
 builder.Services.AddScoped<EngajamentoEquipeRepository>();
 builder.Services.AddScoped<EngajamentoEquipeService>();
+builder.Services.AddScoped<RelatorioExecutivoService>();
 builder.Services.AddScoped<TokenService>();
 
 var jwtKey = builder.Configuration["Jwt:Key"]
