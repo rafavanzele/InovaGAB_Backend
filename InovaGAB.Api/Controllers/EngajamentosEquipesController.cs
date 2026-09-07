@@ -7,7 +7,7 @@ namespace InovaGAB.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Lideranca")]
+    [Authorize]
     public class EngajamentosEquipesController : ControllerBase
     {
         private readonly EngajamentoEquipeService _service;
@@ -17,6 +17,7 @@ namespace InovaGAB.Api.Controllers
             _service = service;
         }
 
+        [Authorize(Roles = "Lideranca")]
         [HttpPost]
         public async Task<IActionResult> Criar(CriarEngajamentoEquipeDto dto)
         {
@@ -25,6 +26,7 @@ namespace InovaGAB.Api.Controllers
             return Ok(engajamento);
         }
 
+        [Authorize(Roles = "Gestor,Lideranca")]
         [HttpGet]
         public async Task<IActionResult> ListarTodos()
         {
@@ -33,6 +35,7 @@ namespace InovaGAB.Api.Controllers
             return Ok(engajamentos);
         }
 
+        [Authorize(Roles = "Gestor,Lideranca")]
         [HttpGet("{id}")]
         public async Task<IActionResult> BuscarPorId(string id)
         {
@@ -46,6 +49,7 @@ namespace InovaGAB.Api.Controllers
             return Ok(engajamento);
         }
 
+        [Authorize(Roles = "Lideranca")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Excluir(string id)
         {
