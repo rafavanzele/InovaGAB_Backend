@@ -17,10 +17,18 @@ namespace InovaGAB.Api.Controllers
             _service = service;
         }
 
+        [Authorize(Roles = "Operador")]
         [HttpGet]
-        public async Task<IActionResult> ListarTodas()
+        public async Task<IActionResult> ListarTodos()
         {
-            var ideias = await _service.ListarTodasAsync();
+            var autorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(autorId))
+            {
+                return Unauthorized(new { mensagem = "Usuário não autenticado." });
+            }
+
+            var ideias = await _service.ListarPorAutorAsync(autorId);
 
             return Ok(ideias);
         }
@@ -34,9 +42,17 @@ namespace InovaGAB.Api.Controllers
             return Ok(ideias);
         }
 
+        [Authorize(Roles = "Operador")]
         [HttpGet("{id}")]
         public async Task<IActionResult> BuscarPorId(string id)
         {
+            var autorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(autorId))
+            {
+                return Unauthorized(new { mensagem = "Usuário não autenticado." });
+            }
+
             var ideia = await _service.BuscarPorIdAsync(id);
 
             if (ideia == null)
@@ -44,10 +60,15 @@ namespace InovaGAB.Api.Controllers
                 return NotFound(new { mensagem = "Ideia não encontrada." });
             }
 
+            if (ideia.AutorId != autorId)
+            {
+                return Forbid();
+            }
+
             return Ok(ideia);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Operador")]
         [HttpPost]
         public async Task<IActionResult> Criar(CriarIdeiaDto dto)
         {
@@ -72,7 +93,7 @@ namespace InovaGAB.Api.Controllers
             );
         }
 
-        [Authorize]
+        [Authorize(Roles = "Operador")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Atualizar(
             string id,
@@ -125,7 +146,7 @@ namespace InovaGAB.Api.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Roles = "Operador")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Excluir(string id)
         {

@@ -18,6 +18,13 @@ namespace InovaGAB.Api.Repositories
             return await _ideias.Find(_ => true).ToListAsync();
         }
 
+        public async Task<List<Ideia>> ListarPorAutorAsync(string autorId)
+        {
+            return await _ideias
+                .Find(ideia => ideia.AutorId == autorId)
+                .ToListAsync();
+        }
+
         public async Task<List<Ideia>> ListarPendentesAsync()
         {
             return await _ideias
