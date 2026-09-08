@@ -25,6 +25,13 @@ namespace InovaGAB.Api.Repositories
                 .ToListAsync();
         }
 
+        public async Task<List<Equipe>> ListarPorGestorAsync(string gestorId)
+        {
+            return await _equipes
+                .Find(equipe => equipe.GestorId == gestorId)
+                .ToListAsync();
+        }
+
         public async Task<Equipe?> BuscarPorIdAsync(string id)
         {
             return await _equipes

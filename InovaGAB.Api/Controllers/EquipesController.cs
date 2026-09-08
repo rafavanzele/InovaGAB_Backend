@@ -2,6 +2,7 @@
 using InovaGAB.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace InovaGAB.Api.Controllers
 {
@@ -17,22 +18,43 @@ namespace InovaGAB.Api.Controllers
             _service = service;
         }
 
+        [Authorize(Roles = "Gestor")]
         [HttpGet]
-        public async Task<IActionResult> ListarTodas()
+        public async Task<IActionResult> ListarTodos()
         {
-            var equipes = await _service.ListarTodasAsync();
+            var gestorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(gestorId))
+            {
+                return Unauthorized(new { mensagem = "Usuário não autenticado." });
+            }
+
+            var equipes = await _service.ListarPorGestorAsync(gestorId);
 
             return Ok(equipes);
         }
 
+        [Authorize(Roles = "Gestor")]
         [HttpGet("{id}")]
         public async Task<IActionResult> BuscarPorId(string id)
         {
+            var gestorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(gestorId))
+            {
+                return Unauthorized(new { mensagem = "Usuário não autenticado." });
+            }
+
             var equipe = await _service.BuscarPorIdAsync(id);
 
             if (equipe == null)
             {
                 return NotFound(new { mensagem = "Equipe não encontrada." });
+            }
+
+            if (equipe.GestorId != gestorId)
+            {
+                return Forbid();
             }
 
             return Ok(equipe);
@@ -70,12 +92,30 @@ namespace InovaGAB.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Criar(CriarEquipeDto dto)
         {
-            var equipe = await _service.CriarAsync(dto);
+            var gestorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            return CreatedAtAction(
-                nameof(Criar),
-                new { id = equipe.Id },
-                equipe);
+            if (string.IsNullOrEmpty(gestorId))
+            {
+                return Unauthorized(new { mensagem = "Usuário não autenticado." });
+            }
+
+            try
+            {
+                var equipe = await _service.CriarAsync(dto, gestorId);
+
+                return CreatedAtAction(
+                    nameof(Criar),
+                    new { id = equipe.Id },
+                    equipe);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Forbid();
+            }
         }
     }
 }

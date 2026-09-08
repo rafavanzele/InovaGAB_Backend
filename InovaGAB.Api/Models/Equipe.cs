@@ -20,6 +20,9 @@ namespace InovaGAB.Api.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string? ProjetoId { get; set; }
 
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string GestorId { get; set; } = string.Empty;
+
         public DateTime DataCriacao { get; set; } = DateTime.UtcNow;
     }
 }
