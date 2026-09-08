@@ -101,6 +101,11 @@ namespace InovaGAB.Api.Controllers
         {
             var autorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
+            if (string.IsNullOrEmpty(autorId))
+            {
+                return Unauthorized(new { mensagem = "Usuário não autenticado." });
+            }
+
             var ideiaExistente = await _service.BuscarPorIdAsync(id);
 
             if (ideiaExistente == null)
@@ -151,6 +156,11 @@ namespace InovaGAB.Api.Controllers
         public async Task<IActionResult> Excluir(string id)
         {
             var autorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(autorId))
+            {
+                return Unauthorized(new { mensagem = "Usuário não autenticado." });
+            }
 
             var ideiaExistente = await _service.BuscarPorIdAsync(id);
 
