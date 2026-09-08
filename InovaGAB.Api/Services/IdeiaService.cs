@@ -97,6 +97,11 @@ namespace InovaGAB.Api.Services
                 return null;
             }
 
+            if (ideia.Status != "Pendente")
+            {
+                throw new ArgumentException("A ideia já foi avaliada.");
+            }
+
             ideia.Status = dto.Status;
 
             var atualizado = await _repository.AtualizarAsync(id, ideia);
