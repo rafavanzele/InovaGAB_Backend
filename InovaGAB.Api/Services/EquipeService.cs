@@ -67,13 +67,29 @@ namespace InovaGAB.Api.Services
             return await _repository.BuscarPorIdAsync(id);
         }
 
-        public async Task<Equipe?> AtualizarAsync(string id, CriarEquipeDto dto)
+        public async Task<Equipe?> AtualizarAsync(string id, CriarEquipeDto dto, string gestorId)
         {
             var equipe = await _repository.BuscarPorIdAsync(id);
 
             if (equipe == null)
             {
                 return null;
+            }
+
+            if (!string.IsNullOrEmpty(dto.ProjetoId))
+            {
+                var projeto = await _projetoRepository.BuscarPorIdAsync(dto.ProjetoId);
+
+                if (projeto == null)
+                {
+                    throw new ArgumentException("Projeto não encontrado.");
+                }
+
+                if (projeto.GestorId != gestorId)
+                {
+                    throw new UnauthorizedAccessException(
+                        "O projeto informado não pertence ao Gestor autenticado.");
+                }
             }
 
             equipe.Nome = dto.Nome;

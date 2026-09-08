@@ -64,20 +64,64 @@ namespace InovaGAB.Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Atualizar(string id, CriarEquipeDto dto)
         {
-            var equipe = await _service.AtualizarAsync(id, dto);
+            var gestorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (equipe == null)
+            if (string.IsNullOrEmpty(gestorId))
+            {
+                return Unauthorized(new { mensagem = "Usuário não autenticado." });
+            }
+
+            var equipeExistente = await _service.BuscarPorIdAsync(id);
+
+            if (equipeExistente == null)
             {
                 return NotFound(new { mensagem = "Equipe não encontrada." });
             }
 
-            return Ok(equipe);
+            if (equipeExistente.GestorId != gestorId)
+            {
+                return Forbid();
+            }
+
+            try
+            {
+                var equipe = await _service.AtualizarAsync(id, dto, gestorId);
+
+                return Ok(equipe);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Forbid();
+            }
         }
 
         [Authorize(Roles = "Gestor")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Excluir(string id)
         {
+            var gestorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(gestorId))
+            {
+                return Unauthorized(new { mensagem = "Usuário não autenticado." });
+            }
+
+            var equipeExistente = await _service.BuscarPorIdAsync(id);
+
+            if (equipeExistente == null)
+            {
+                return NotFound(new { mensagem = "Equipe não encontrada." });
+            }
+
+            if (equipeExistente.GestorId != gestorId)
+            {
+                return Forbid();
+            }
+
             var excluiu = await _service.ExcluirAsync(id);
 
             if (!excluiu)
