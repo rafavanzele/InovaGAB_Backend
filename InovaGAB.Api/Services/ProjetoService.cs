@@ -18,6 +18,11 @@ namespace InovaGAB.Api.Services
             return await _repository.ListarTodosAsync();
         }
 
+        public async Task<List<Projeto>> ListarPorGestorAsync(string gestorId)
+        {
+            return await _repository.ListarPorGestorAsync(gestorId);
+        }
+
         public async Task<Projeto?> BuscarPorIdAsync(string id)
         {
             return await _repository.BuscarPorIdAsync(id);

@@ -18,22 +18,43 @@ namespace InovaGAB.Api.Controllers
             _service = service;
         }
 
+        [Authorize(Roles = "Gestor")]
         [HttpGet]
         public async Task<IActionResult> ListarTodos()
         {
-            var projetos = await _service.ListarTodosAsync();
+            var gestorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(gestorId))
+            {
+                return Unauthorized(new { mensagem = "Usuário não autenticado." });
+            }
+
+            var projetos = await _service.ListarPorGestorAsync(gestorId);
 
             return Ok(projetos);
         }
 
+        [Authorize(Roles = "Gestor")]
         [HttpGet("{id}")]
         public async Task<IActionResult> BuscarPorId(string id)
         {
+            var gestorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(gestorId))
+            {
+                return Unauthorized(new { mensagem = "Usuário não autenticado." });
+            }
+
             var projeto = await _service.BuscarPorIdAsync(id);
 
             if (projeto == null)
             {
                 return NotFound(new { mensagem = "Projeto não encontrado." });
+            }
+
+            if (projeto.GestorId != gestorId)
+            {
+                return Forbid();
             }
 
             return Ok(projeto);
