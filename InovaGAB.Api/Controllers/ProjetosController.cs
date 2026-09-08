@@ -45,6 +45,25 @@ namespace InovaGAB.Api.Controllers
             string id,
             AtualizarProjetoDto dto)
         {
+            var gestorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(gestorId))
+            {
+                return Unauthorized(new { mensagem = "Usuário não autenticado." });
+            }
+
+            var projetoExistente = await _service.BuscarPorIdAsync(id);
+
+            if (projetoExistente == null)
+            {
+                return NotFound(new { mensagem = "Projeto não encontrado." });
+            }
+
+            if (projetoExistente.GestorId != gestorId)
+            {
+                return Forbid();
+            }
+
             var projeto = await _service.AtualizarAsync(id, dto);
 
             if (projeto == null)
@@ -78,6 +97,25 @@ namespace InovaGAB.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Excluir(string id)
         {
+            var gestorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(gestorId))
+            {
+                return Unauthorized(new { mensagem = "Usuário não autenticado." });
+            }
+
+            var projetoExistente = await _service.BuscarPorIdAsync(id);
+
+            if (projetoExistente == null)
+            {
+                return NotFound(new { mensagem = "Projeto não encontrado." });
+            }
+
+            if (projetoExistente.GestorId != gestorId)
+            {
+                return Forbid();
+            }
+
             var excluido = await _service.ExcluirAsync(id);
 
             if (!excluido)
