@@ -40,6 +40,34 @@ namespace InovaGAB.Api.Services
             return await _repository.BuscarPorIdAsync(id);
         }
 
+        public async Task<ResultadoAlcancado?> AtualizarAsync(
+            string id,
+            CriarResultadoAlcancadoDto dto)
+        {
+            var resultado = await _repository.BuscarPorIdAsync(id);
+
+            if (resultado == null)
+            {
+                return null;
+            }
+
+            resultado.Titulo = dto.Titulo;
+            resultado.Descricao = dto.Descricao;
+            resultado.Categoria = dto.Categoria;
+            resultado.ValorAlcancado = dto.ValorAlcancado;
+            resultado.Unidade = dto.Unidade;
+            resultado.DataResultado = dto.DataResultado;
+
+            var atualizado = await _repository.AtualizarAsync(resultado);
+
+            if (!atualizado)
+            {
+                return null;
+            }
+
+            return resultado;
+        }
+
         public async Task<bool> ExcluirAsync(string id)
         {
             return await _repository.ExcluirAsync(id);

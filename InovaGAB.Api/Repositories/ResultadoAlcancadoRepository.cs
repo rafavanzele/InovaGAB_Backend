@@ -31,6 +31,16 @@ namespace InovaGAB.Api.Repositories
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<bool> AtualizarAsync(ResultadoAlcancado resultado)
+        {
+            var retorno = await _collection.ReplaceOneAsync(
+                item => item.Id == resultado.Id,
+                resultado
+            );
+
+            return retorno.MatchedCount > 0;
+        }
+
         public async Task<bool> ExcluirAsync(string id)
         {
             var resultado = await _collection.DeleteOneAsync(

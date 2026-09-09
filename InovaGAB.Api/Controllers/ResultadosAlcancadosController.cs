@@ -46,6 +46,21 @@ namespace InovaGAB.Api.Controllers
             return Ok(resultado);
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Atualizar(
+            string id,
+            CriarResultadoAlcancadoDto dto)
+        {
+            var resultado = await _service.AtualizarAsync(id, dto);
+
+            if (resultado == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(resultado);
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Excluir(string id)
         {
