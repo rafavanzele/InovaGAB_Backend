@@ -50,6 +50,22 @@ namespace InovaGAB.Api.Controllers
         }
 
         [Authorize(Roles = "Lideranca")]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Atualizar(
+            string id,
+            CriarEngajamentoEquipeDto dto)
+        {
+            var engajamento = await _service.AtualizarAsync(id, dto);
+
+            if (engajamento == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(engajamento);
+        }
+
+        [Authorize(Roles = "Lideranca")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Excluir(string id)
         {
