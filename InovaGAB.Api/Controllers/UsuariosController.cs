@@ -4,11 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 using InovaGAB.Api.DTOs;
 using InovaGAB.Api.Services;
 using Microsoft.AspNetCore.Authorization;
+using MongoDB.Bson;
 
 namespace InovaGAB.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class UsuariosController : ControllerBase
     {
         private readonly UsuarioRepository _repository;
@@ -22,7 +24,7 @@ namespace InovaGAB.Api.Controllers
             _tokenService = tokenService;
         }
 
-        [Authorize]
+        [Authorize(Roles = "Lideranca")]
         [HttpGet]
         public async Task<ActionResult<List<UsuarioResponseDto>>> ListarTodos()
         {
@@ -39,9 +41,15 @@ namespace InovaGAB.Api.Controllers
             return Ok(response);
         }
 
+        [Authorize(Roles = "Lideranca")]
         [HttpGet("{id}")]
         public async Task<ActionResult<UsuarioResponseDto>> BuscarPorId(string id)
         {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                return NotFound();
+            }
+
             var usuario = await _repository.BuscarPorIdAsync(id);
 
             if (usuario == null)
@@ -60,6 +68,7 @@ namespace InovaGAB.Api.Controllers
             return Ok(response);
         }
 
+        [Authorize(Roles = "Lideranca")]
         [HttpPost]
         public async Task<ActionResult<UsuarioResponseDto>> Criar(CriarUsuarioDto dto)
         {
@@ -87,6 +96,7 @@ namespace InovaGAB.Api.Controllers
                 response);
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult<LoginResponseDto>> Login(LoginDto dto)
         {
@@ -118,9 +128,15 @@ namespace InovaGAB.Api.Controllers
             return Ok(response);
         }
 
+        [Authorize(Roles = "Lideranca")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Atualizar(string id, AtualizarUsuarioDto dto)
         {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                return NotFound();
+            }
+
             var usuarioExistente = await _repository.BuscarPorIdAsync(id);
 
             if (usuarioExistente == null)
@@ -137,9 +153,15 @@ namespace InovaGAB.Api.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Lideranca")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Excluir(string id)
         {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                return NotFound();
+            }
+
             var usuarioExistente = await _repository.BuscarPorIdAsync(id);
 
             if (usuarioExistente == null)
