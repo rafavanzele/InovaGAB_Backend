@@ -1,6 +1,7 @@
 ﻿using InovaGAB.Api.DTOs;
 using InovaGAB.Api.Models;
 using InovaGAB.Api.Repositories;
+using MongoDB.Bson;
 
 namespace InovaGAB.Api.Services
 {
@@ -22,6 +23,11 @@ namespace InovaGAB.Api.Services
         {
             if (!string.IsNullOrEmpty(dto.ProjetoId))
             {
+                if (!ObjectId.TryParse(dto.ProjetoId, out _))
+                {
+                    throw new ArgumentException("O ID do projeto informado é inválido.");
+                }
+
                 var projeto = await _projetoRepository.BuscarPorIdAsync(dto.ProjetoId);
 
                 if (projeto == null)
@@ -64,11 +70,21 @@ namespace InovaGAB.Api.Services
 
         public async Task<Equipe?> BuscarPorIdAsync(string id)
         {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                return null;
+            }
+
             return await _repository.BuscarPorIdAsync(id);
         }
 
         public async Task<Equipe?> AtualizarAsync(string id, CriarEquipeDto dto, string gestorId)
         {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                return null;
+            }
+
             var equipe = await _repository.BuscarPorIdAsync(id);
 
             if (equipe == null)
@@ -78,6 +94,11 @@ namespace InovaGAB.Api.Services
 
             if (!string.IsNullOrEmpty(dto.ProjetoId))
             {
+                if (!ObjectId.TryParse(dto.ProjetoId, out _))
+                {
+                    throw new ArgumentException("O ID do projeto informado é inválido.");
+                }
+
                 var projeto = await _projetoRepository.BuscarPorIdAsync(dto.ProjetoId);
 
                 if (projeto == null)
@@ -105,6 +126,11 @@ namespace InovaGAB.Api.Services
 
         public async Task<bool> ExcluirAsync(string id)
         {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                return false;
+            }
+
             var equipe = await _repository.BuscarPorIdAsync(id);
 
             if (equipe == null)
