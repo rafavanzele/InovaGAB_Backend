@@ -15,6 +15,8 @@ namespace InovaGAB.Api.Models
 
         public string Categoria { get; set; } = string.Empty;
 
+        public string DiretrizId { get; set; } = string.Empty;
+
         public string AutorId { get; set; } = string.Empty;
 
         public string AutorNome { get; set; } = string.Empty;

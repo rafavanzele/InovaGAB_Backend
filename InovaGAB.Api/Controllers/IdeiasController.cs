@@ -80,17 +80,24 @@ namespace InovaGAB.Api.Controllers
                 return Unauthorized(new { mensagem = "Usuário não autenticado." });
             }
 
-            var ideia = await _service.CriarAsync(
-                dto,
-                autorId,
-                autorNome
-            );
+            try
+            {
+                var ideia = await _service.CriarAsync(
+                    dto,
+                    autorId,
+                    autorNome
+                );
 
-            return CreatedAtAction(
-                nameof(BuscarPorId),
-                new { id = ideia.Id },
-                ideia
-            );
+                return CreatedAtAction(
+                    nameof(BuscarPorId),
+                    new { id = ideia.Id },
+                    ideia
+                );
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
+            }
         }
 
         [Authorize(Roles = "Operador")]
