@@ -1,6 +1,7 @@
 ﻿using InovaGAB.Api.Repositories;
 using InovaGAB.Api.Models;
 using InovaGAB.Api.DTOs;
+using MongoDB.Bson;
 
 namespace InovaGAB.Api.Services
 {
@@ -30,6 +31,11 @@ namespace InovaGAB.Api.Services
 
         public async Task<Ideia?> BuscarPorIdAsync(string id)
         {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                return null;
+            }
+
             return await _repository.BuscarPorIdAsync(id);
         }
 
@@ -58,6 +64,11 @@ namespace InovaGAB.Api.Services
             string id,
             AtualizarIdeiaDto dto)
         {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                return null;
+            }
+
             var ideia = await _repository.BuscarPorIdAsync(id);
 
             if (ideia == null)
@@ -83,6 +94,11 @@ namespace InovaGAB.Api.Services
             string id,
             AtualizarStatusIdeiaDto dto)
         {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                return null;
+            }
+
             var statusPermitidos = new[] { "Aprovada", "Rejeitada" };
 
             if (!statusPermitidos.Contains(dto.Status))
@@ -116,6 +132,11 @@ namespace InovaGAB.Api.Services
 
         public async Task<bool> ExcluirAsync(string id)
         {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                return false;
+            }
+
             var ideia = await _repository.BuscarPorIdAsync(id);
 
             if (ideia == null)
