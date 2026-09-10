@@ -1,6 +1,7 @@
 ﻿using InovaGAB.Api.DTOs;
 using InovaGAB.Api.Models;
 using InovaGAB.Api.Repositories;
+using MongoDB.Bson;
 
 namespace InovaGAB.Api.Services
 {
@@ -37,6 +38,11 @@ namespace InovaGAB.Api.Services
 
         public async Task<ResultadoAlcancado?> BuscarPorIdAsync(string id)
         {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                return null;
+            }
+
             return await _repository.BuscarPorIdAsync(id);
         }
 
@@ -44,6 +50,11 @@ namespace InovaGAB.Api.Services
             string id,
             CriarResultadoAlcancadoDto dto)
         {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                return null;
+            }
+
             var resultado = await _repository.BuscarPorIdAsync(id);
 
             if (resultado == null)
@@ -70,6 +81,11 @@ namespace InovaGAB.Api.Services
 
         public async Task<bool> ExcluirAsync(string id)
         {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                return false;
+            }
+
             return await _repository.ExcluirAsync(id);
         }
     }
