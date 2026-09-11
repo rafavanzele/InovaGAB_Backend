@@ -102,6 +102,8 @@ namespace InovaGAB.Api.Services
             projeto.Prazo = dto.Prazo;
             projeto.Investimento = dto.Investimento;
             projeto.RetornoPrevisto = dto.RetornoPrevisto;
+            projeto.Status = dto.Status;
+            projeto.Progresso = dto.Progresso;
 
             var atualizado = await _repository.AtualizarAsync(projeto);
 
