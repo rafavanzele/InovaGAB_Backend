@@ -24,6 +24,16 @@ namespace InovaGAB.Api.DTOs
             ErrorMessage = "O responsável deve ter entre 3 e 100 caracteres.")]
         public string Responsavel { get; set; } = string.Empty;
 
+        [Required(ErrorMessage = "A categoria é obrigatória.")]
+        [StringLength(100, MinimumLength = 3,
+            ErrorMessage = "A categoria deve ter entre 3 e 100 caracteres.")]
+        public string Categoria { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "A campanha é obrigatória.")]
+        [StringLength(100, MinimumLength = 3,
+            ErrorMessage = "A campanha deve ter entre 3 e 100 caracteres.")]
+        public string Campanha { get; set; } = string.Empty;
+
         [Required(ErrorMessage = "O status é obrigatório.")]
         public string Status { get; set; } = "Ativa";
     }

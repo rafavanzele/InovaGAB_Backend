@@ -21,6 +21,8 @@ namespace InovaGAB.Api.Services
                 Descricao = dto.Descricao,
                 Objetivo = dto.Objetivo,
                 Responsavel = dto.Responsavel,
+                Categoria = dto.Categoria,
+                Campanha = dto.Campanha,
                 Status = dto.Status,
                 DataCriacao = DateTime.UtcNow
             };
@@ -55,6 +57,8 @@ namespace InovaGAB.Api.Services
             diretriz.Descricao = dto.Descricao;
             diretriz.Objetivo = dto.Objetivo;
             diretriz.Responsavel = dto.Responsavel;
+            diretriz.Categoria = dto.Categoria;
+            diretriz.Campanha = dto.Campanha;
             diretriz.Status = dto.Status;
 
             await _repository.AtualizarAsync(id, diretriz);

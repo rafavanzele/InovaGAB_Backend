@@ -17,6 +17,10 @@ namespace InovaGAB.Api.Models
 
         public string Responsavel { get; set; } = string.Empty;
 
+        public string Categoria { get; set; } = string.Empty;
+
+        public string Campanha { get; set; } = string.Empty;
+
         public string Status { get; set; } = "Ativa";
 
         public DateTime DataCriacao { get; set; } = DateTime.UtcNow;
