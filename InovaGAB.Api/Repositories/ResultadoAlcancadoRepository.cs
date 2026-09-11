@@ -24,6 +24,24 @@ namespace InovaGAB.Api.Repositories
             return await _collection.Find(_ => true).ToListAsync();
         }
 
+        public async Task<List<ResultadoAlcancado>> ListarPorProjetosAsync(
+            IEnumerable<string> projetoIds)
+        {
+            var ids = projetoIds.ToList();
+
+            if (ids.Count == 0)
+            {
+                return new List<ResultadoAlcancado>();
+            }
+
+            var filtro = Builders<ResultadoAlcancado>.Filter.In(
+                resultado => resultado.ProjetoId,
+                ids
+            );
+
+            return await _collection.Find(filtro).ToListAsync();
+        }
+
         public async Task<ResultadoAlcancado?> BuscarPorIdAsync(string id)
         {
             return await _collection

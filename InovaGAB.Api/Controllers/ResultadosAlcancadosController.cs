@@ -2,12 +2,13 @@
 using InovaGAB.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace InovaGAB.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Lideranca")]
+    [Authorize]
     public class ResultadosAlcancadosController : ControllerBase
     {
         private readonly ResultadoAlcancadoService _service;
@@ -17,61 +18,129 @@ namespace InovaGAB.Api.Controllers
             _service = service;
         }
 
+        [Authorize(Roles = "Gestor")]
         [HttpPost]
         public async Task<IActionResult> Criar(CriarResultadoAlcancadoDto dto)
         {
-            var resultado = await _service.CriarAsync(dto);
+            var gestorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            return Ok(resultado);
+            if (string.IsNullOrEmpty(gestorId))
+            {
+                return Unauthorized(new { mensagem = "Usuário não autenticado." });
+            }
+
+            try
+            {
+                var resultado = await _service.CriarAsync(dto, gestorId);
+
+                return Ok(resultado);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return StatusCode(
+                    StatusCodes.Status403Forbidden,
+                    new { mensagem = ex.Message }
+                );
+            }
         }
 
+        [Authorize(Roles = "Gestor,Lideranca")]
         [HttpGet]
         public async Task<IActionResult> ListarTodos()
         {
-            var resultados = await _service.ListarTodosAsync();
+            var usuarioId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var perfil = User.FindFirst(ClaimTypes.Role)?.Value;
 
-            return Ok(resultados);
-        }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> BuscarPorId(string id)
-        {
-            var resultado = await _service.BuscarPorIdAsync(id);
-
-            if (resultado == null)
+            if (string.IsNullOrEmpty(usuarioId) || string.IsNullOrEmpty(perfil))
             {
-                return NotFound();
+                return Unauthorized(new { mensagem = "Usuário não autenticado." });
             }
 
-            return Ok(resultado);
+            if (perfil == "Lideranca")
+            {
+                var todosResultados = await _service.ListarTodosAsync();
+                return Ok(todosResultados);
+            }
+
+            var resultadosDoGestor = await _service.ListarPorGestorAsync(usuarioId);
+
+            return Ok(resultadosDoGestor);
         }
 
+        [Authorize(Roles = "Gestor")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Atualizar(
             string id,
             CriarResultadoAlcancadoDto dto)
         {
-            var resultado = await _service.AtualizarAsync(id, dto);
+            var gestorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (resultado == null)
+            if (string.IsNullOrEmpty(gestorId))
             {
-                return NotFound();
+                return Unauthorized(new { mensagem = "Usuário não autenticado." });
             }
 
-            return Ok(resultado);
+            try
+            {
+                var resultado = await _service.AtualizarAsync(id, dto, gestorId);
+
+                if (resultado == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(resultado);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return StatusCode(
+                    StatusCodes.Status403Forbidden,
+                    new { mensagem = ex.Message }
+                );
+            }
         }
 
+        [Authorize(Roles = "Gestor")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Excluir(string id)
         {
-            var excluido = await _service.ExcluirAsync(id);
+            var gestorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (!excluido)
+            if (string.IsNullOrEmpty(gestorId))
             {
-                return NotFound();
+                return Unauthorized(new { mensagem = "Usuário não autenticado." });
             }
 
-            return NoContent();
+            try
+            {
+                var excluido = await _service.ExcluirAsync(id, gestorId);
+
+                if (!excluido)
+                {
+                    return NotFound();
+                }
+
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return StatusCode(
+                    StatusCodes.Status403Forbidden,
+                    new { mensagem = ex.Message }
+                );
+            }
         }
     }
 }

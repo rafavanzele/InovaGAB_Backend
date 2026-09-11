@@ -17,6 +17,9 @@ public class CriarResultadoAlcancadoDto
         ErrorMessage = "A categoria deve ter entre 3 e 100 caracteres.")]
     public string Categoria { get; set; } = string.Empty;
 
+    [Required(ErrorMessage = "O projeto é obrigatório.")]
+    public string ProjetoId { get; set; } = string.Empty;
+
     [Range(0, double.MaxValue,
         ErrorMessage = "O valor alcançado não pode ser negativo.")]
     public decimal ValorAlcancado { get; set; }

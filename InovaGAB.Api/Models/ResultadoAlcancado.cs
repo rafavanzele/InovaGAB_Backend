@@ -15,6 +15,8 @@ namespace InovaGAB.Api.Models
 
         public string Categoria { get; set; } = string.Empty;
 
+        public string ProjetoId { get; set; } = string.Empty;
+
         public decimal ValorAlcancado { get; set; }
 
         public string Unidade { get; set; } = string.Empty;
