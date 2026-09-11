@@ -18,29 +18,37 @@ namespace InovaGAB.Api.Controllers
             _service = service;
         }
 
-        [Authorize(Roles = "Gestor")]
+        [Authorize(Roles = "Gestor,Lideranca")]
         [HttpGet]
         public async Task<IActionResult> ListarTodos()
         {
-            var gestorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var usuarioId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var perfil = User.FindFirst(ClaimTypes.Role)?.Value;
 
-            if (string.IsNullOrEmpty(gestorId))
+            if (string.IsNullOrEmpty(usuarioId) || string.IsNullOrEmpty(perfil))
             {
                 return Unauthorized(new { mensagem = "Usuário não autenticado." });
             }
 
-            var projetos = await _service.ListarPorGestorAsync(gestorId);
+            if (perfil == "Lideranca")
+            {
+                var todosProjetos = await _service.ListarTodosAsync();
+                return Ok(todosProjetos);
+            }
 
-            return Ok(projetos);
+            var projetosDoGestor = await _service.ListarPorGestorAsync(usuarioId);
+
+            return Ok(projetosDoGestor);
         }
 
-        [Authorize(Roles = "Gestor")]
+        [Authorize(Roles = "Gestor,Lideranca")]
         [HttpGet("{id}")]
         public async Task<IActionResult> BuscarPorId(string id)
         {
-            var gestorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var usuarioId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var perfil = User.FindFirst(ClaimTypes.Role)?.Value;
 
-            if (string.IsNullOrEmpty(gestorId))
+            if (string.IsNullOrEmpty(usuarioId) || string.IsNullOrEmpty(perfil))
             {
                 return Unauthorized(new { mensagem = "Usuário não autenticado." });
             }
@@ -52,7 +60,7 @@ namespace InovaGAB.Api.Controllers
                 return NotFound(new { mensagem = "Projeto não encontrado." });
             }
 
-            if (projeto.GestorId != gestorId)
+            if (perfil == "Gestor" && projeto.GestorId != usuarioId)
             {
                 return Forbid();
             }
@@ -106,12 +114,20 @@ namespace InovaGAB.Api.Controllers
                 return Unauthorized(new { mensagem = "Usuário não autenticado." });
             }
 
-            var projeto = await _service.CriarAsync(dto, gestorId);
+            try
+            {
+                var projeto = await _service.CriarAsync(dto, gestorId);
 
-            return CreatedAtAction(
-                nameof(ListarTodos),
-                new { id = projeto.Id },
-                projeto);
+                return CreatedAtAction(
+                    nameof(BuscarPorId),
+                    new { id = projeto.Id },
+                    projeto
+                );
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
+            }
         }
 
         [Authorize(Roles = "Gestor")]

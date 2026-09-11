@@ -13,6 +13,8 @@ namespace InovaGAB.Api.Models
 
         public string Descricao { get; set; } = string.Empty;
 
+        public string DiretrizId { get; set; } = string.Empty;
+
         public string Responsavel { get; set; } = string.Empty;
 
         public string Status { get; set; } = "Iniciado";

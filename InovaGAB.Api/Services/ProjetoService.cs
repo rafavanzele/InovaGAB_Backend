@@ -8,10 +8,14 @@ namespace InovaGAB.Api.Services
     public class ProjetoService
     {
         private readonly ProjetoRepository _repository;
+        private readonly DiretrizEstrategicaRepository _diretrizRepository;
 
-        public ProjetoService(ProjetoRepository repository)
+        public ProjetoService(
+            ProjetoRepository repository,
+            DiretrizEstrategicaRepository diretrizRepository)
         {
             _repository = repository;
+            _diretrizRepository = diretrizRepository;
         }
 
         public async Task<List<Projeto>> ListarTodosAsync()
@@ -36,10 +40,30 @@ namespace InovaGAB.Api.Services
 
         public async Task<Projeto> CriarAsync(CriarProjetoDto dto, string gestorId)
         {
+            if (!ObjectId.TryParse(dto.DiretrizId, out _))
+            {
+                throw new ArgumentException("Diretriz estratégica inválida.");
+            }
+
+            var diretriz = await _diretrizRepository.BuscarPorIdAsync(dto.DiretrizId);
+
+            if (diretriz == null)
+            {
+                throw new ArgumentException("Diretriz estratégica não encontrada.");
+            }
+
+            if (diretriz.Status != "Ativa")
+            {
+                throw new ArgumentException(
+                    "A diretriz estratégica informada não está ativa."
+                );
+            }
+
             var projeto = new Projeto
             {
                 Titulo = dto.Titulo,
                 Descricao = dto.Descricao,
+                DiretrizId = dto.DiretrizId,
                 Responsavel = dto.Responsavel,
                 Prazo = dto.Prazo,
                 Investimento = dto.Investimento,

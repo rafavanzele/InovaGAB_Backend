@@ -14,6 +14,9 @@ namespace InovaGAB.Api.DTOs
             ErrorMessage = "A descrição deve ter entre 10 e 500 caracteres.")]
         public string Descricao { get; set; } = string.Empty;
 
+        [Required(ErrorMessage = "A diretriz estratégica é obrigatória.")]
+        public string DiretrizId { get; set; } = string.Empty;
+
         [Required(ErrorMessage = "O responsável é obrigatório.")]
         [StringLength(100, MinimumLength = 3,
             ErrorMessage = "O responsável deve ter entre 3 e 100 caracteres.")]
