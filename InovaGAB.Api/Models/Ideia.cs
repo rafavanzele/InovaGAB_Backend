@@ -23,6 +23,8 @@ namespace InovaGAB.Api.Models
 
         public string Status { get; set; } = "Pendente";
 
+        public bool Priorizada { get; set; } = false;
+
         public DateTime DataCriacao { get; set; } = DateTime.UtcNow;
     }
 }

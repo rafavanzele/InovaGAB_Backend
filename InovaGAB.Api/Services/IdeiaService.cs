@@ -154,6 +154,34 @@ namespace InovaGAB.Api.Services
             return ideia;
         }
 
+        public async Task<Ideia?> AtualizarPriorizacaoAsync(
+            string id,
+            AtualizarPriorizacaoIdeiaDto dto)
+        {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                return null;
+            }
+
+            var ideia = await _repository.BuscarPorIdAsync(id);
+
+            if (ideia == null)
+            {
+                return null;
+            }
+
+            ideia.Priorizada = dto.Priorizada;
+
+            var atualizado = await _repository.AtualizarAsync(id, ideia);
+
+            if (!atualizado)
+            {
+                return null;
+            }
+
+            return ideia;
+        }
+
         public async Task<bool> ExcluirAsync(string id)
         {
             if (!ObjectId.TryParse(id, out _))

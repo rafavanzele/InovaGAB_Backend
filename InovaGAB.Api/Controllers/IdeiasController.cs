@@ -158,6 +158,22 @@ namespace InovaGAB.Api.Controllers
             }
         }
 
+        [Authorize(Roles = "Gestor")]
+        [HttpPatch("{id}/priorizacao")]
+        public async Task<IActionResult> AtualizarPriorizacao(
+            string id,
+            AtualizarPriorizacaoIdeiaDto dto)
+        {
+            var ideia = await _service.AtualizarPriorizacaoAsync(id, dto);
+
+            if (ideia == null)
+            {
+                return NotFound(new { mensagem = "Ideia não encontrada." });
+            }
+
+            return Ok(ideia);
+        }
+
         [Authorize(Roles = "Operador")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Excluir(string id)
