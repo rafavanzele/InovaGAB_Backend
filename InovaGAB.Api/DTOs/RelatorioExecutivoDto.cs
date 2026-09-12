@@ -24,6 +24,8 @@
 
         public List<ResultadoProjetoRelatorioDto> ResultadosPorProjeto { get; set; } = new();
 
+        public List<ResultadoEstrategiaRelatorioDto> ResultadosPorEstrategia { get; set; } = new();
+
         public DateTime DataGeracao { get; set; }
     }
 }

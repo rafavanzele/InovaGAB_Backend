@@ -63,6 +63,25 @@ namespace InovaGAB.Api.Services
                 }
             ).ToList();
 
+            var resultadosPorEstrategia = diretrizes.Select(diretriz =>
+            {
+                var projetosDaEstrategia = resultadosPorProjeto
+                    .Where(projeto => projeto.DiretrizId == diretriz.Id)
+                    .ToList();
+
+                return new ResultadoEstrategiaRelatorioDto
+                {
+                    DiretrizId = diretriz.Id ?? string.Empty,
+                    DiretrizTitulo = diretriz.Titulo,
+                    Categoria = diretriz.Categoria,
+                    Campanha = diretriz.Campanha,
+                    TotalProjetos = projetosDaEstrategia.Count,
+                    TotalResultados = projetosDaEstrategia.Sum(
+                        projeto => projeto.Resultados.Count),
+                    Projetos = projetosDaEstrategia
+                };
+            }).ToList();
+
             return new RelatorioExecutivoDto
             {
                 TotalIdeias = ideias.Count,
@@ -78,6 +97,7 @@ namespace InovaGAB.Api.Services
 
                 MediaEngajamentoEquipes = mediaEngajamento,
                 ResultadosPorProjeto = resultadosPorProjeto,
+                ResultadosPorEstrategia = resultadosPorEstrategia,
                 DataGeracao = DateTime.UtcNow
             };
         }
