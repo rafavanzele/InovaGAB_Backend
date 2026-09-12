@@ -89,6 +89,8 @@ namespace InovaGAB.Api.Services
                 .Where(r => r.Unidade == "R$")
                 .Sum(r => r.ValorAlcancado);
 
+            var lucroObtido = retornoFinanceiroTotal - investimentoTotalProjetos;
+
             decimal? roiPercentual = investimentoTotalProjetos > 0
                 ? ((retornoFinanceiroTotal - investimentoTotalProjetos)
                     / investimentoTotalProjetos) * 100
@@ -109,6 +111,7 @@ namespace InovaGAB.Api.Services
 
                 InvestimentoTotalProjetos = investimentoTotalProjetos,
                 RetornoFinanceiroTotal = retornoFinanceiroTotal,
+                LucroObtido = lucroObtido,
                 RoiPercentual = roiPercentual,
 
                 MediaEngajamentoEquipes = mediaEngajamento,

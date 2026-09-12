@@ -24,6 +24,8 @@
 
         public decimal RetornoFinanceiroTotal { get; set; }
 
+        public decimal LucroObtido { get; set; }
+
         public decimal? RoiPercentual { get; set; }
 
         public decimal MediaEngajamentoEquipes { get; set; }
