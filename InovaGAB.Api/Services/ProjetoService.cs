@@ -72,6 +72,7 @@ namespace InovaGAB.Api.Services
                 GestorId = gestorId,
                 DataCriacao = DateTime.UtcNow,
                 Status = "Iniciado",
+                Etapa = "Planejamento",
                 Resultado = "Em andamento",
                 Progresso = 0
             };
@@ -105,6 +106,7 @@ namespace InovaGAB.Api.Services
             projeto.InvestimentoValor = dto.InvestimentoValor;
             projeto.RetornoPrevisto = dto.RetornoPrevisto;
             projeto.Status = dto.Status;
+            projeto.Etapa = dto.Etapa;
             projeto.Progresso = dto.Progresso;
 
             var atualizado = await _repository.AtualizarAsync(projeto);

@@ -34,6 +34,9 @@ namespace InovaGAB.Api.DTOs
         [Required(ErrorMessage = "O status é obrigatório.")]
         public string Status { get; set; } = string.Empty;
 
+        [Required(ErrorMessage = "A etapa é obrigatória.")]
+        public string Etapa { get; set; } = string.Empty;
+
         [Range(0, 100, ErrorMessage = "O progresso deve estar entre 0 e 100.")]
         public float Progresso { get; set; }
     }

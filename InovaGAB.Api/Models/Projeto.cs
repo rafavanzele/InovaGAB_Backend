@@ -19,6 +19,8 @@ namespace InovaGAB.Api.Models
 
         public string Status { get; set; } = "Iniciado";
 
+        public string Etapa { get; set; } = "Planejamento";
+
         public string Prazo { get; set; } = string.Empty;
 
         public string Investimento { get; set; } = string.Empty;
