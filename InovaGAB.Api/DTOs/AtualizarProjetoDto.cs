@@ -32,6 +32,7 @@ namespace InovaGAB.Api.DTOs
         public string RetornoPrevisto { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "O status é obrigatório.")]
+        [RegularExpression("^(Iniciado|Em andamento|Concluído)$", ErrorMessage = "O status deve ser: Iniciado, Em andamento ou Concluído.")]
         public string Status { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "A etapa é obrigatória.")]

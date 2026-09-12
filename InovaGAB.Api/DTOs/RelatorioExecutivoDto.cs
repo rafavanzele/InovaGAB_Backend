@@ -12,6 +12,10 @@
 
         public int TotalProjetos { get; set; }
 
+        public int ProjetosEmAndamento { get; set; }
+
+        public int ProjetosConcluidos { get; set; }
+
         public int TotalEquipes { get; set; }
 
         public int TotalDiretrizesEstrategicas { get; set; }

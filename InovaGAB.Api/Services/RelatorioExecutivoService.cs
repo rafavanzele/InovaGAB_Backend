@@ -104,6 +104,8 @@ namespace InovaGAB.Api.Services
                 IdeiasRejeitadas = ideias.Count(i => i.Status == "Rejeitada"),
 
                 TotalProjetos = projetos.Count,
+                ProjetosEmAndamento = projetos.Count(p => p.Status == "Iniciado" || p.Status == "Em andamento"),
+                ProjetosConcluidos = projetos.Count(p => p.Status == "Concluído"),
                 TotalEquipes = equipes.Count,
                 TotalDiretrizesEstrategicas = diretrizes.Count,
                 TotalIndicadoresEstrategicos = indicadores.Count,
