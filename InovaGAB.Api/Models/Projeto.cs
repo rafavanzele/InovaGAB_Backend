@@ -23,6 +23,9 @@ namespace InovaGAB.Api.Models
 
         public string Investimento { get; set; } = string.Empty;
 
+        [BsonRepresentation(BsonType.Decimal128)]
+        public decimal? InvestimentoValor { get; set; }
+
         public string RetornoPrevisto { get; set; } = string.Empty;
 
         public string Resultado { get; set; } = "Em andamento";

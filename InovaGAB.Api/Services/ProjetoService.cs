@@ -67,6 +67,7 @@ namespace InovaGAB.Api.Services
                 Responsavel = dto.Responsavel,
                 Prazo = dto.Prazo,
                 Investimento = dto.Investimento,
+                InvestimentoValor = dto.InvestimentoValor,
                 RetornoPrevisto = dto.RetornoPrevisto,
                 GestorId = gestorId,
                 DataCriacao = DateTime.UtcNow,
@@ -101,6 +102,7 @@ namespace InovaGAB.Api.Services
             projeto.Responsavel = dto.Responsavel;
             projeto.Prazo = dto.Prazo;
             projeto.Investimento = dto.Investimento;
+            projeto.InvestimentoValor = dto.InvestimentoValor;
             projeto.RetornoPrevisto = dto.RetornoPrevisto;
             projeto.Status = dto.Status;
             projeto.Progresso = dto.Progresso;

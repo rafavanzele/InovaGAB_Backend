@@ -28,6 +28,9 @@ namespace InovaGAB.Api.DTOs
         [Required(ErrorMessage = "O investimento é obrigatório.")]
         public string Investimento { get; set; } = string.Empty;
 
+        [Range(0, double.MaxValue, ErrorMessage = "O valor do investimento não pode ser negativo.")]
+        public decimal? InvestimentoValor { get; set; }
+
         [Required(ErrorMessage = "O retorno previsto é obrigatório.")]
         public string RetornoPrevisto { get; set; } = string.Empty;
     }

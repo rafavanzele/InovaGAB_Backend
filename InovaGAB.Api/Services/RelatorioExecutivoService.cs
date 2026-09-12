@@ -95,6 +95,8 @@ namespace InovaGAB.Api.Services
                 TotalIndicadoresEstrategicos = indicadores.Count,
                 TotalResultadosAlcancados = resultados.Count,
 
+                InvestimentoTotalProjetos = projetos.Sum(p => p.InvestimentoValor ?? 0),
+
                 MediaEngajamentoEquipes = mediaEngajamento,
                 ResultadosPorProjeto = resultadosPorProjeto,
                 ResultadosPorEstrategia = resultadosPorEstrategia,
