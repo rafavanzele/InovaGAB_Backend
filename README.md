@@ -157,7 +157,7 @@ docker build -t inovagab-api -f InovaGAB.Api/Dockerfile .
 Após a criação da imagem, execute o container:
 
 ```bash
-docker run -p 8080:8080 inovagab-api
+docker run -p 8080:8080 -e ASPNETCORE_ENVIRONMENT=Development -e Jwt__Key="SUA_CHAVE_JWT" -e MongoDbSettings__ConnectionString="mongodb://host.docker.internal:27017" inovagab-api
 ```
 
 A API ficará disponível em:
