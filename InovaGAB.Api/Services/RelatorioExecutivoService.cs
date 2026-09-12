@@ -82,6 +82,18 @@ namespace InovaGAB.Api.Services
                 };
             }).ToList();
 
+            var investimentoTotalProjetos = projetos
+                .Sum(p => p.InvestimentoValor ?? 0);
+
+            var retornoFinanceiroTotal = resultados
+                .Where(r => r.Unidade == "R$")
+                .Sum(r => r.ValorAlcancado);
+
+            decimal? roiPercentual = investimentoTotalProjetos > 0
+                ? ((retornoFinanceiroTotal - investimentoTotalProjetos)
+                    / investimentoTotalProjetos) * 100
+                : null;
+
             return new RelatorioExecutivoDto
             {
                 TotalIdeias = ideias.Count,
@@ -95,11 +107,9 @@ namespace InovaGAB.Api.Services
                 TotalIndicadoresEstrategicos = indicadores.Count,
                 TotalResultadosAlcancados = resultados.Count,
 
-                InvestimentoTotalProjetos = projetos.Sum(p => p.InvestimentoValor ?? 0),
-
-                RetornoFinanceiroTotal = resultados
-                    .Where(r => r.Unidade == "R$")
-                    .Sum(r => r.ValorAlcancado),
+                InvestimentoTotalProjetos = investimentoTotalProjetos,
+                RetornoFinanceiroTotal = retornoFinanceiroTotal,
+                RoiPercentual = roiPercentual,
 
                 MediaEngajamentoEquipes = mediaEngajamento,
                 ResultadosPorProjeto = resultadosPorProjeto,
