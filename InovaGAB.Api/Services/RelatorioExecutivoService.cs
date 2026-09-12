@@ -97,6 +97,10 @@ namespace InovaGAB.Api.Services
 
                 InvestimentoTotalProjetos = projetos.Sum(p => p.InvestimentoValor ?? 0),
 
+                RetornoFinanceiroTotal = resultados
+                    .Where(r => r.Unidade == "R$")
+                    .Sum(r => r.ValorAlcancado),
+
                 MediaEngajamentoEquipes = mediaEngajamento,
                 ResultadosPorProjeto = resultadosPorProjeto,
                 ResultadosPorEstrategia = resultadosPorEstrategia,

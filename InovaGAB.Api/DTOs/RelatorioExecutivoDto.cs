@@ -22,6 +22,8 @@
 
         public decimal InvestimentoTotalProjetos { get; set; }
 
+        public decimal RetornoFinanceiroTotal { get; set; }
+
         public decimal MediaEngajamentoEquipes { get; set; }
 
         public List<ResultadoProjetoRelatorioDto> ResultadosPorProjeto { get; set; } = new();
