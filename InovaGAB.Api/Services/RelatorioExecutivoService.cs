@@ -91,6 +91,17 @@ namespace InovaGAB.Api.Services
 
             var lucroObtido = retornoFinanceiroTotal - investimentoTotalProjetos;
 
+            var resultadosProdutividade = resultados
+                .Where(r =>
+                    r.Categoria == "Produtividade" &&
+                    r.Unidade == "%")
+                .ToList();
+
+            decimal? mediaAumentoProdutividadePercentual =
+                resultadosProdutividade.Count > 0
+                    ? resultadosProdutividade.Average(r => r.ValorAlcancado)
+                    : null;
+
             decimal? roiPercentual = investimentoTotalProjetos > 0
                 ? ((retornoFinanceiroTotal - investimentoTotalProjetos)
                     / investimentoTotalProjetos) * 100
@@ -117,6 +128,7 @@ namespace InovaGAB.Api.Services
                 RoiPercentual = roiPercentual,
 
                 MediaEngajamentoEquipes = mediaEngajamento,
+                MediaAumentoProdutividadePercentual = mediaAumentoProdutividadePercentual,
                 ResultadosPorProjeto = resultadosPorProjeto,
                 ResultadosPorEstrategia = resultadosPorEstrategia,
                 DataGeracao = DateTime.UtcNow

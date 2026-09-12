@@ -34,6 +34,8 @@
 
         public decimal MediaEngajamentoEquipes { get; set; }
 
+        public decimal? MediaAumentoProdutividadePercentual { get; set; }
+
         public List<ResultadoProjetoRelatorioDto> ResultadosPorProjeto { get; set; } = new();
 
         public List<ResultadoEstrategiaRelatorioDto> ResultadosPorEstrategia { get; set; } = new();
