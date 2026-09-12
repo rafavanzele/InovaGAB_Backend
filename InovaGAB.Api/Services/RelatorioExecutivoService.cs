@@ -45,6 +45,24 @@ namespace InovaGAB.Api.Services
                 ? engajamentos.Average(e => e.PercentualEngajamento)
                 : 0;
 
+            var resultadosPorProjeto = projetos.Select(projeto =>
+                new ResultadoProjetoRelatorioDto
+                {
+                    ProjetoId = projeto.Id ?? string.Empty,
+                    ProjetoTitulo = projeto.Titulo,
+                    DiretrizId = projeto.DiretrizId,
+                    Status = projeto.Status,
+                    Prazo = projeto.Prazo,
+                    Investimento = projeto.Investimento,
+                    RetornoPrevisto = projeto.RetornoPrevisto,
+                    Progresso = projeto.Progresso,
+
+                    Resultados = resultados
+                       .Where(resultado => resultado.ProjetoId == projeto.Id)
+                       .ToList()
+                }
+            ).ToList();
+
             return new RelatorioExecutivoDto
             {
                 TotalIdeias = ideias.Count,
@@ -59,6 +77,7 @@ namespace InovaGAB.Api.Services
                 TotalResultadosAlcancados = resultados.Count,
 
                 MediaEngajamentoEquipes = mediaEngajamento,
+                ResultadosPorProjeto = resultadosPorProjeto,
                 DataGeracao = DateTime.UtcNow
             };
         }

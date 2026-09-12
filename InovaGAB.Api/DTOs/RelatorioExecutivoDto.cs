@@ -22,6 +22,8 @@
 
         public decimal MediaEngajamentoEquipes { get; set; }
 
+        public List<ResultadoProjetoRelatorioDto> ResultadosPorProjeto { get; set; } = new();
+
         public DateTime DataGeracao { get; set; }
     }
 }
