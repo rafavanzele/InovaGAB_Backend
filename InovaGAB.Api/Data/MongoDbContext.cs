@@ -38,5 +38,8 @@ namespace InovaGAB.Api.Data
 
         public IMongoCollection<EngajamentoEquipe> EngajamentosEquipes =>
             _database.GetCollection<EngajamentoEquipe>("engajamentosEquipes");
+
+        public IMongoCollection<AuditLog> AuditLogs =>
+            _database.GetCollection<AuditLog>("auditLogs");
     }
 }
