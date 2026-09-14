@@ -1,6 +1,35 @@
 @InovaGAB.Api_HostAddress = http://localhost:5223
 
-GET {{InovaGAB.Api_HostAddress}}/weatherforecast/
+### Login
+POST {{InovaGAB.Api_HostAddress}}/api/Usuarios/login
+Content-Type: application/json
+
+{
+  "email": "lideranca@inovagab.com",
+  "senha": "123456"
+}
+
+###
+
+@token = COLE_AQUI_O_TOKEN_JWT
+
+### Listar usuários
+GET {{InovaGAB.Api_HostAddress}}/api/Usuarios
+Authorization: Bearer {{token}}
+Accept: application/json
+
+###
+
+### Listar projetos
+GET {{InovaGAB.Api_HostAddress}}/api/Projetos
+Authorization: Bearer {{token}}
+Accept: application/json
+
+###
+
+### Métricas de observabilidade
+GET {{InovaGAB.Api_HostAddress}}/api/Observability/metrics
+Authorization: Bearer {{token}}
 Accept: application/json
 
 ###

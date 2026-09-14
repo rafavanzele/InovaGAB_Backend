@@ -67,6 +67,16 @@ cd InovaGAB_Backend
 dotnet restore
 ```
 
+### Configurar a chave JWT
+
+Antes de executar a API, configure a chave secreta utilizada para geração dos tokens JWT por meio do .NET User Secrets:
+
+```bash
+dotnet user-secrets set "Jwt:Key" "SUA_CHAVE_JWT_COM_PELO_MENOS_32_CARACTERES" --project InovaGAB.Api
+```
+
+A chave JWT não é armazenada no repositório por motivos de segurança.
+
 ### Executar a API
 
 ```bash
@@ -192,13 +202,15 @@ Os endpoints protegidos utilizam autorização baseada em roles, garantindo que 
 
 Informações sensíveis, como chaves JWT e strings de conexão, devem ser configuradas de forma adequada ao ambiente de execução e não devem ser expostas publicamente.
 
-## Logs e Monitoramento
+## Observabilidade e Auditoria
 
-A aplicação utiliza os recursos de logging nativos do ASP.NET Core, com níveis de log configurados no arquivo `appsettings.json`.
+A aplicação utiliza os recursos de logging do ASP.NET Core para o registro de informações relacionadas à execução da API, com níveis de log configurados no arquivo `appsettings.json`.
 
-Os logs da aplicação podem ser utilizados para acompanhar sua execução e auxiliar na identificação de erros e no diagnóstico do ambiente.
+Além dos logs da aplicação, o backend possui um mecanismo de auditoria para registrar operações relevantes realizadas no sistema. Os registros de auditoria são persistidos no MongoDB e permitem rastrear informações sobre as ações executadas pela API.
 
-Mecanismos adicionais de observabilidade, como métricas e auditoria de operações, podem ser incorporados em evoluções futuras da aplicação.
+A implementação de auditoria está organizada na camada `Observability`, mantendo essa responsabilidade separada das regras de negócio e contribuindo para a rastreabilidade e a manutenção da aplicação.
+
+Essa estrutura fornece uma base de observabilidade para acompanhamento da execução do backend e investigação de operações realizadas no sistema.
 
 ## Considerações Finais
 
